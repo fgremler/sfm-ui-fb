@@ -1,0 +1,8 @@
+{% load humanize %}This is a warning that free space on your Social Feed Manager server at {{ url }} is low.
+
+{% for item in space_data %}
+    {% if item.send_email %}
+        Storage for {{ item.volume_id }}
+        Remaining free space is currently {{ item.total_free_space }}. This is below the {{ item.threshold }} warning level.
+    {% endif %}
+{% endfor %}

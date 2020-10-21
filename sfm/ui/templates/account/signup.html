@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}
+    Sign Up
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="col-md-12">
+<h1>Sign Up</h1>
+</div>
+<div class="col-md-6">
+<p>Already have an account? <a href={% url 'account_login' %}>Log in</a></p>
+<form method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+        {{ form.username.errors }}
+        <label for="id_username">Username</label>
+        <input type="text" class="form-control" id="id_username" name="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+        {{ form.email.errors }}
+        <label for="id_email">Email address</label>
+        <input type="email" class="form-control" id="id_email" name="email" placeholder="Email">
+    </div>
+    <div class="form-group">
+        {{ form.password1.errors }}
+        <label for="id_password1">Password</label>
+        <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Password">
+    </div>
+    <div class="form-group">
+        {{ form.password2.errors }}
+        <label for="id_password2">Password (again)</label>
+        <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Password">
+    </div>
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button class="btn btn-primary" type="submit">Sign up</button>
+</form>
+</div>
+
+<div class="col-md-5 col-md-offset-1" style="text-align: justify">
+    <p><strong>Social Feed Manager</strong> empowers researchers and archivists to create collections of social media data from Twitter, Tumblr, Flickr, and Sina Weibo. <a href="http://sfm.readthedocs.io/en/latest/">Learn more about Social Feed Manager</a>.</p>
+</div>
+{% endblock %}

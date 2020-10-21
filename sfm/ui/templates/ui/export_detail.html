@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ collection_set.name }}
+{% endblock %}
+
+{% block content_header %}
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href={% url "collection_set_list" %}>Collection Sets</a></li>
+      <li class="breadcrumb-item"><a href={% url "collection_set_detail" collection_set.pk %} >{{ collection_set.name }}</a></li>
+      <li class="breadcrumb-item"><a href={% url "collection_detail" collection.pk %} >{{ collection.name }}</a></li>
+      <li class="breadcrumb-item active">Export</li>
+    </ol>
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+{% if fileinfos %}
+<div class="row">
+    <div class="col-md-12">
+    <div class="card mb-3">
+        <div class="card-heading bg-light pl-3 pr-3 pt-2 pb-2 border"><h4>Export files for {{ collection.name }}</h4></div>
+        <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="border-0">Filename</th>
+                  <th class="border-0">Size</th>
+                </tr>
+              </thead>
+            {% for filename, bytes in fileinfos %}
+                <tr>
+                    <td><a href={% url "export_file" export.pk filename %}>{{ filename }}</a></td>
+                    <td>{{ bytes|filesizeformat }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
+    <p>See the <a href="http://sfm.readthedocs.io/en/latest/data_dictionary.html" target="_blank">data dictionary</a> for more information about the fields in the export.</p>
+    <p>See the <a href="http://sfm.readthedocs.io/en/latest/citing.html" target="_blank">guidance</a> on citing SFM and datasets.</p>
+    <p><strong>Status:</strong> {{ export.get_status_display }}</p>
+    <p><strong>Format:</strong> {{ export.export_format }}</p>
+    {% if not export.collection %}
+        <p><strong>Selected seeds:</strong></p>
+        <ul class="ul_nav">
+        {% for seed in export.seeds.all %}
+            <li class="longseed">{{ seed.label }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        {% if export.collection.seeds.all %}
+            <p><strong>Selected seeds:</strong> All seeds</p>
+        {% endif %}
+    {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+          <div class="card mb-3">
+               <div class="card-heading bg-light pl-3 pr-3 pt-2 pb-2 border">
+                   <a class="collapse-toggle" data-toggle="collapse" href="#collapse">Details  <span class="caret"></span></a>
+               </div>
+             <div id="collapse" class="collapse" style="margin-bottom: 10px;margin-left: 10px; margin-top: 10px">
+                <p><strong>Export type:</strong> {{ export.export_type }}</p>
+                <p><strong>Export segment size:</strong> {{ export.get_export_segment_size_display }}</p>
+                <p><strong>Deduplicate:</strong> {{ export.dedupe|yesno }}</p>
+                <p><strong>Item start date:</strong>{% if export.item_date_start %} {{ export.item_date_start }} {% endif %} {% if not export.item_date_start %}No limit set{% endif %}</p>
+                <p><strong>Item end date:</strong>{% if export.item_date_end %} {{ export.item_date_end }} {% endif %} {% if not export.item_date_end %}No limit set{% endif %}</p>
+                <p><strong>Harvest start date:</strong>{% if export.harvest_date_start %} {{ export.harvest_date_start }} {% endif %} {% if not export.harvest_date_start %}No limit set{% endif %}</p>
+                <p><strong>Harvest end date:</strong>{% if export.harvest_date_end %} {{ export.harvest_date_end }} {% endif %} {% if not export.harvest_date_end %}No limit set{% endif %}</p>
+                <p><strong>Requested:</strong> {{ export.date_requested }}</p>
+                {% if export.date_ended %}
+                <p><strong>Ended:</strong> {{ export.date_ended }}</p>
+                {% endif %}
+                {% if export.service %}
+                <p><strong>Performed by:</strong> {{ export.service }} on {{ export.host }} ({{ export.instance }})</p>
+                {% endif %}
+                <p><strong>Id:</strong> {{ export.export_id }}</p>
+             </div>
+          </div>
+      </div>
+</div>
+<div class="row">
+   <div class="col-md-12">
+       {% if export.infos %}
+           <p><strong>Informational messages:</strong></p>
+           <ul class="ul_nav">
+            {% for msg in export.infos %}
+                <li>{{ msg.message }}</li>
+            {% endfor %}
+           </ul>
+       {% endif %}
+       {% if export.warnings %}
+           <p><strong>Warning messages:</strong></p>
+           <ul class="ul_nav">
+            {% for msg in export.warnings %}
+                <li>{{ msg.message }}</li>
+            {% endfor %}
+           </ul>
+       {% endif %}
+       {% if export.errors %}
+            <p><strong>Error messages:</strong></p>
+            <ul class="ul_nav">
+            {% for msg in export.errors %}
+                <li>{{ msg.message }}</li>
+            {% endfor %}
+            </ul>
+       {% endif %}
+    </div>
+</div>
+<div class="row subsection">
+    <div class="col-md-12">
+        {% include "ui/terms_snippet.html" %}
+    </div>
+</div>
+{% endblock %}

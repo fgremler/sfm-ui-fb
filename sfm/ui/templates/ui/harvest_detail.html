@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}
+    {{ collection_set.name }}
+{% endblock %}
+
+{% block content_header %}
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href={% url "collection_set_list" %}>Collection Sets</a></li>
+      <li class="breadcrumb-item"><a href={% url "collection_set_detail" collection_set.pk %} >{{ collection_set.name }}</a></li>
+      <li class="breadcrumb-item"><a href={% url "collection_detail" collection.pk %} >{{ collection.name }}</a></li>
+      <li class="breadcrumb-item active">Harvest</li>
+    </ol>
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+    <p><strong>Id:</strong> {{ harvest.harvest_id }}</p>
+    <p><strong>Requested:</strong> {{ harvest.date_requested }}</p>
+    {% if harvest.date_started %}
+        <p><strong>Started:</strong> {{ harvest.date_started }}</p>
+    {% endif %}
+    {% if harvest.date_ended %}
+        <p><strong>Ended:</strong> {{ harvest.date_ended }}</p>
+    {% endif %}
+    <p><strong>Updated:</strong> {{ harvest.date_updated }}</p>
+    <p><strong>Status:</strong> {{ harvest.get_status_display }}</p>
+    {% if harvest.service %}
+        <p><strong>Performed by:</strong> {{ harvest.service }} on {{ harvest.host }} ({{ harvest.instance }})</p>
+    {% endif %}
+    <p><strong>Harvest type:</strong> {{ harvest.harvest_type }}</p>
+    {% if harvest.stats %}
+        <p><strong>Stats:</strong></p>
+        <ul>
+            {% for item, count in harvest.stats.items %}
+                <li>{{ item }}: {{ count|intcomma }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if harvest.infos %}
+        <p><strong>Informational messages:</strong></p>
+        <ul class="ul_nav">
+            {% for msg in harvest.infos %}
+                <li>{{ msg.message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if harvest.warnings %}
+        <p><strong>Warning messages:</strong></p>
+        <ul class="ul_nav">
+                {% for msg in harvest.warnings %}
+                    <li>{{ msg.message }}</li>
+                {% endfor %}
+        </ul>
+    {% endif %}
+    {% if harvest.errors %}
+        <p><strong>Error messages:</strong></p>
+        <ul class="ul_nav">
+            {% for msg in harvest.errors %}
+                <li>{{ msg.message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if harvest.warcs_count %}
+        <p><strong>WARCs:</strong> {{ harvest.warcs_count }} file{{ harvest.warcs_count|pluralize }} ({{ harvest.warcs_bytes|filesizeformat }})</p>
+    {% endif %}
+    </div>
+    {% if harvest.parent_harvest %}
+        <p><strong>This harvest requested by:</strong> <a href="{% url "harvest_detail" harvest.parent_harvest.pk %}">{{ harvest.parent_harvest.get_harvest_type_display }} harvest</a> ({{ harvest.parent_harvest.date_requested }})</p>
+    {% endif %}
+    {% if harvest.child_harvests.count %}
+        <p><strong>This harvest requested:</strong></p>
+        <ul>
+        {% for child_harvest in harvest.child_harvests.all %}
+            <li><a href="{% url "harvest_detail" child_harvest.pk %}">{{ child_harvest.get_harvest_type_display }} harvest</a> ({{ child_harvest.date_requested }})</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+</div>
+<br />
+{% if can_void %}
+    <form method="post" action={% url "harvest_void" harvest.pk %}>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            Void
+        </button>
+        <p class="help-block">
+            Voiding this harvest will allow the next harvest to be requested even though this one has not been successfully
+            completed. It will not cancel this harvest if it is still queued to be processed or is already running. You may
+            want to void this harvest if you believe that there is a problem with it and would like the next harvest to
+            be able to proceed.
+        </p>
+    </form>
+{% endif %}
+
+{% endblock %}

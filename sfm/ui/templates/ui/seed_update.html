@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+   {{ seed.token }}
+{% endblock %}
+
+{% block content_header %}
+<div class="row">
+   <div class="col-md-12">
+       <ol class="breadcrumb">
+           <li class="breadcrumb-item"><a href={% url "collection_set_list" %}>Collection Sets</a></li>
+           <li class="breadcrumb-item"><a href={% url "collection_set_detail" collection_set.pk %}>{{ collection_set.name }}</a></li>
+           <li class="breadcrumb-item"><a href={% url "collection_detail" seed.collection.pk %}>{{ seed.collection.name }}</a></li>
+           <li class="breadcrumb-item active">{{ seed.collection.get_harvest_type_display }} seed</a></li>
+       </ol>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-12">
+       <div class="page-header">
+           <h1>{{ seed.collection.get_harvest_type_display }} seed</h1>
+       </div> 
+   </div>         
+</div>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+          {% crispy form %}
+  </div>
+</div>
+{% endblock %}

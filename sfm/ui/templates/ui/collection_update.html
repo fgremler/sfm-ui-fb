@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Update {{ collection }}
+{% endblock %}
+
+{% block javascript %}
+    {% include "ui/credential_warnings_snippet.js" %}
+{% endblock javascript %}
+
+{% block content_header %}
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href={% url "collection_set_list" %}>Collection Sets</a></li>
+      <li class="breadcrumb-item"><a href={% url "collection_set_detail" collection.collection_set.pk %}>{{ collection.collection_set.name }}</a></li>
+      <li class="breadcrumb-item active">{{ collection.name }}</li>
+    </ol>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="page-header">
+      <h1>{{ collection.name }}</h1>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    {% crispy form %}
+  </div>
+</div>
+{% if has_seeds_list %}
+<div class="row">
+  <div class="card mb-3">
+    <div class="card-heading bg-light pl-3 pr-3 pt-2 pb-2 border"><h4>Seeds</h4></div>
+       <div class="card-body">
+         <table class="table">
+           <thead>
+             <tr>
+	       <th class="border-0">Token</th>
+	       <th class="border-0">uid</th>
+	       <th class="border-0">Next harvest</th>
+	       <th class="border-0">Active</th>
+             </tr>
+            </thead>
+          {% for seed in seed_list %}
+	     <tr>
+	       <td><a href="{% url "seed_detail" seed.pk %}">{{ seed.token }}</a></td>
+	       <td>{{ seed.uid }}</td>
+	       <td></td>
+	       <td>{{ seed.is_active|yesno:"Yes,No" }}</td>
+             </tr>
+          {% endfor %}
+           </table>
+       </div>
+    </div>
+</div>
+{% endif %}
+<script src="{% static 'ui/js/datepicker.js' %}"></script>
+{% endblock %}

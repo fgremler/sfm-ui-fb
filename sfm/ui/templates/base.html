@@ -1,0 +1,206 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en" ng-app>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}sfm{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/png" href="{% static 'ui/img/favicon.ico' %}" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!--Replacement for bootstrap-multiselect-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+
+    <!-- Your stuff: Third-party css libraries go here -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Wruczek/Bootstrap-Cookie-Alert@gh-pages/cookiealert.css">
+
+    <!-- SFM-specific CSS -->
+    <link rel="stylesheet" href="{% static 'ui/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/cookie_consent.css' %}">
+    {% if ENABLE_GW_FOOTER %}
+      <link rel="stylesheet" href="{% static 'ui/css/gw/gw_footer.css' %}">
+    {% endif %}
+
+    {% block css %}
+
+    {% endblock %}
+
+    <!-- Latest JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <!--Bootstrap 4 requires Popper.js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- datatables.js with Bootstrap 4 support -->
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+    <!--Font Awesome for icons-->
+    <script src="https://kit.fontawesome.com/012dee33a5.js" crossorigin="anonymous"></script>
+    <!-- multiselect javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+
+    <script src="{% static 'ui/js/seed_multiselect.js' %}"></script>
+    <script src="{% static 'ui/js/seed_select_option.js' %}"></script>
+    <script src="{% static 'ui/js/cookie_consent.js' %}"></script>
+
+    <!-- flatpickr for jQuery datetimepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="{% static 'ui/js/flatpickr.js' %}"></script>
+
+    {% block javascript %}
+
+    {% endblock %}
+
+    {% block extra_head %}
+        <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+	      <script src="{% static 'ui/js/data_tables.js' %}"></script>
+	      <script type="text/javascript">
+           var oPaginationType = "bs_normal";
+           var oLanguages = {
+                "lengthMenu": "Display _MENU_ records per page",
+                "info": "",
+                "infoEmpty": "",
+                "emptyTable": "",
+                "zeroRecords": "",
+                "infoFiltered": "(filtered from _MAX_ total records)",
+                "paginate": {
+                  "previous": "Previous"
+                }
+            };
+	      </script>
+    {% endblock %}
+  </head>
+
+  <body>
+
+    {% if ENABLE_COOKIE_CONSENT %}
+
+      <div class="alert cookiealert" role="alert">
+        <div class="container">
+          <div class="row align-items-center">
+            <!-- The "safe" filter is needed to disable automatic HTML escaping;
+                 this allows us to use HTML tags in the consent text,
+                 for example to include an <a> tag for a link -->
+            <div id="cookie_text" class="col-10">
+              {{ COOKIE_CONSENT_HTML | safe }}
+            </div>
+            <div id="cookie_button" class="col-2">
+              <button type="button" class="btn btn-primary btn-sm acceptcookies">
+                {{ COOKIE_CONSENT_BUTTON_TEXT }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+
+    <!-- skip link -->
+    <div id="skiptocontent">
+      <a href="#maincontent">Skip to main content</a>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-3">  
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+         <a class="navbar-brand" href="{% url 'home' %}">Social Feed Manager</a>
+          <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-1" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+          
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        {% if request.user.is_authenticated %}
+          <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+	            <li class="nav-item"><a class="nav-link" href={% url "collection_set_list" %}>Collection Sets</a></li>
+	            <li class="nav-item"><a class="nav-link" href={% url "credential_list" %}>Credentials</a></li>
+                <li class="nav-item"><a class="nav-link" href={% url "export_list" %}>Exports</a></li>
+                <li class="nav-item"><a class="nav-link" href={% url "monitor" %}>Monitor</a></li>
+            </ul>
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, {{ user.username }}<span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  {% if request.user.is_staff %}<li><a href="{% url 'admin:index' %}">Admin</a></li>{% endif %}
+                  <li class="dropdown-item"><a href="{% url 'user_profile_detail'%}">Your profile</a></li>
+                  <li class="dropdown-item"><a href="{% url 'account_change_password' %}">Change password</a></li>
+                  <li class="dropdown-item"><a href="{% url 'account_logout' %}">Log out</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </nav>
+
+    <main id="maincontent" class="container sfm-container">
+      {% block content_header %}
+      {% endblock content_header %}
+      {% if messages %}
+         <div class="row">
+           <div class="col-md-12">
+              {% for message in messages %}
+                 {% if message.tags %}
+                   {% if message.tags == "error" %}
+                     <!-- django.contrib.messages uses "error" but bootstrap uses "danger" -->
+                     <div class="alert alert-danger" role="alert">
+                   {% else %}
+                     <div class="alert alert-{{ message.tags }}" role="status">
+                   {% endif %}
+                 {% else %}
+                   <div class="alert" role="status">
+                 {% endif %}
+                 {{ message }}</div>
+              {% endfor %}
+           </div>
+         </div>
+      {% endif %}
+      {% block content %}
+        <p></p>
+      {% endblock content %}
+    </main> <!-- /container -->
+
+    {% block modal %}{% endblock modal %}
+
+    <footer class="footer">
+        <div class="footer-upper">
+          <hr>
+          <div>
+            <strong>SFM version {{ SFM_UI_VERSION }}</strong>
+            {% if INSTITUTION_NAME %}
+              {% if INSTITUTION_LINK %}
+                <strong> is a service of </strong><a class="footer-blue" href={{ INSTITUTION_LINK }} title="institution-name" target="_blank">{{ INSTITUTION_NAME }}</a>
+              {% else %}
+                <strong> is a service of {{ INSTITUTION_NAME }}</strong>
+              {% endif %}
+            {% endif %}
+          </div>
+          <div>
+            <a id="getstarted" class="footer-blue" target="_blank" href="http://sfm.readthedocs.io/en/latest/userguide.html">User Guide</a>
+            <span class="footer-divider"> | </span>
+            <a id="doc" class="footer-blue" target="_blank" href="https://sfm.readthedocs.org">Documentation</a>
+            <span class="footer-divider"> | </span>
+            <a id="citing" class="footer-blue" target="_blank" href="http://sfm.readthedocs.io/en/latest/citing.html">Citing</a>
+            {% if CONTACT_EMAIL %}
+            <span class="footer-divider"> | </span>
+            <a id="contactus" class="footer-blue" target="_blank" href="mailto:{{ CONTACT_EMAIL }}">Contact Us</a>
+            {% endif %} </div>
+        </div>
+        {% if ENABLE_GW_FOOTER %}
+          {% include "gw/gw_footer_lower.html" %}
+        {% endif %}
+    </footer>
+</body>
+</html>

@@ -1,0 +1,290 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    font-family: "Open Sans", Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #333;
+    padding: 3px;
+    height: 100%;
+    margin-bottom: 120px;
+}
+
+h1 {
+   margin-bottom: 1rem;
+}
+
+a {
+    color: #2971a7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #004065;
+}
+
+a.btn {
+    text-decoration: none;
+}
+
+.btn-primary:active, .btn-primary:hover {
+    background-color: #017ABC;
+    border-color: #017ABC;
+    color: #FFF;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active {
+    background-color: #017ABC;
+    border-color: #017ABC;
+    color: #FFF;
+}
+
+.show>.btn-primary.dropdown-toggle:focus {
+    background-color: #017ABC;
+    border-color: #017ABC;
+    color: #FFF;
+}
+
+.btn-primary {
+    background-color: #2971a7;
+    border-color: #2971a7;
+}
+
+.btn-danger {
+    background-color: #C9102F;
+    border-color: #C9102F; 
+}
+
+.btn-success {
+    background-color: #78BE20;
+    border-color: #78BE20;
+}
+
+.btn-link i {
+    color: #2971a7;
+}
+
+.alert {
+    margin-top: 10px;
+}
+
+.alert-info {
+    background-color: #ccedff;
+    color: #333;
+}
+
+.alert-success {
+    color: #333;
+}
+
+.alert-warning {
+    background-color: #fcf2cf;
+    color: #333;
+}
+
+.alert-danger {
+    color: #333;
+}
+
+.nav-link {
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.navbar-header a {
+    text-decoration:none;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #333;
+    text-decoration: none;
+}
+
+.breadcrumb {
+    background-color: #ffffff;
+}
+
+.panel-on {
+    background-color: #eeeeee;
+    color: #333;
+}
+
+.panel-on>.panel-heading {
+    color: #fff;
+    background-color: #004065;
+    background-image: none;
+    border-bottom: solid 1px #ffffff;
+}
+
+.panel-off {
+    background-color: #dddddd;
+}
+
+.panel-off>.panel-heading {
+    background-color: #dddddd;
+    background-image: none;
+    border-bottom: solid 1px #ffffff;
+}
+
+.btn-stacked {
+    margin-top: 8px;
+}
+
+.btn-aligned {
+    margin-left: 15px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 120px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.footer .footer-upper {
+    margin-bottom: 16px;
+    font-weight: 700;
+    line-height: 1.75;
+}
+
+.footer .footer-blue {
+    color: #2971a7;
+}
+
+.footer .footer-divider {
+    color: #ccc;
+}
+
+.sfm-container {
+    min-height: 600px;
+}
+.subsection {
+    padding-top: 30px;
+}
+
+.tooltip > .tooltip-inner {
+    min-width: 200px;
+    background-color: #333;
+}
+.modal {
+    top: 35%;
+}
+
+.longseed{
+    word-wrap: break-word;
+    display: none;
+}
+
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.form-reset {
+    max-width: 400px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.block-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ul_nav{
+    max-height:200px;
+    overflow:hidden;
+    word-wrap: break-word;
+    overflow-y:auto;
+}
+
+.fa-fw {
+    padding-right: 25px;
+}
+
+.collapse-toggle::after {
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent;
+}
+
+.crispy-form-custom label {
+    font-weight: bold;
+}
+
+.crispy-form-custom .custom-control-label {
+    font-weight: normal;
+}
+
+.form-text.text-muted {
+    font-size: 100%;
+}
+
+.dataTables_paginate {
+    width: 100%;
+    justify-content: center;
+}
+
+h2.change-log, h2.seeds, h2.harvests, h2.collections {
+    font-size: 1.5rem;
+}
+
+p.harvest-type-display {
+    font-size: 1.75rem;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.dropdown-item:active {
+    background-color: #FFF;
+}
+
+.text-message { 
+   color: #A75523;
+}
+
+.card-title {
+    margin-top: 8px;
+}
+
+#skiptocontent a, #skiptocontent a:hover, #skiptocontent a:visited {
+	position:absolute;
+	left:0px;
+	top:-500px;
+	width:1px;
+	height:1px;
+	overflow:hidden;
+}
+
+#skiptocontent a:active, #skiptocontent a:focus {
+	position:static;
+	width:auto;
+	height:auto;
+}
+
+.filter-option-inner-inner {
+    color: #333;
+}
+
+span.flatpickr-day.selected {
+    background-color: #2971a7;
+    border-color: #2971a7; 
+}

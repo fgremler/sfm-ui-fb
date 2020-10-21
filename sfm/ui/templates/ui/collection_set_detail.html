@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load ui_extras %}
+{% block title %}
+    {{ collection_set.name }}
+{% endblock %}
+
+{% block content_header %}
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href={% url "collection_set_list" %}>Collection Sets</a></li>
+        <li class="breadcrumb-item active">{{ collection_set.name }}</li>
+    </ol>
+  </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h1>{{ collection_set.name }}
+            <a class="btn btn-primary btn-aligned" href="{% url "collection_set_update" collection_set.pk %}"  {% if not can_edit %} disabled {% endif %}>
+            <span><i class="fas fa-pencil-alt fa-fw"></i></span>Edit
+        </a>
+        </h1>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="row subsection">
+    <div class="col-md-12">
+        {% if collection_set.description %}
+            <p><strong>Description: </strong>{{ collection_set.description }}</p>
+        {% endif %}
+        <p><strong>Data collected:</strong> {{ collection_set.warcs_count|intcomma }} file{{ collection_set.warcs_count|pluralize }} ({{ collection_set.warcs_bytes|filesizeformat }})</p>
+        {% if collection_set.stats %}
+            <p><strong>Stats:</strong></p>
+            <ul>
+            {% for item, count in collection_set.stats.items %}
+              <li>{{ item }}: {{ count|intcomma }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+      <div class="card mb-3">
+       <div class="card-heading bg-light pl-3 pt-2 pb-2 border">
+           <a class="collapse-toggle" data-toggle="collapse" href="#collapse">Details  <span class="caret"></span></a>
+       </div>
+       <div id="collapse" class="collapse" style="margin-left: 10px; margin-top: 10px">
+        <p><strong>Group:</strong> {{collection_set.group }}</p>
+        <p><strong>Id:</strong> {{ collection_set.collection_set_id }}</p>
+        <p><strong>Created:</strong> {{ collection_set.date_added|date }}</p>
+       </div>
+      </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
+<div class="row subsection">
+  <div class="col-md-12">
+    <div class="card mb-3">
+        <div class="card-heading bg-light pl-3 pr-3 pt-2 pb-2 border"><h2 class="collections">Collections</h2></div>
+        <div class="card-body">
+            {% if collection_list %}
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th class="border-0">Name</th>
+                  <th class="border-0">Harvest type</th>
+                  <th class="border-0">Active seeds</th>
+                  <th class="border-0">On/off/inactive</th>
+                </tr>
+              </thead>
+            {% for collection in collection_list %}
+                <tr>
+                    <td><a href={% url "collection_detail" collection.pk %}>{{ collection.name }}</a></td>
+                    <td>{{ collection.get_harvest_type_display }}</td>
+                    <td>{{ collection.active_seed_count }}</td>
+                    <td>
+                        {% if collection.is_on %}
+                            <span class="text-success">On</span>
+                        {% elif collection.is_active %}
+                            Off
+                        {% else %}
+                            Inactive
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+            {% else %}
+                <p>No collections yet.</p>
+            {% endif %}
+            <!-- Single button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  {% if not can_edit %} disabled {% endif %}>
+                      Add Collection <span class="caret"></span>
+                </button>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#collectionsModal" aria-label="Details about each collection type">
+                  <!--<a href="#collectionsModal" data-toggle="modal" role="button" >-->
+                    <i class="fas fa-info-circle fa-lg" style="padding-top:7px; margin-left: 5px" aria-hidden="true"></i>
+                    <!--</a>-->
+                  </button>
+
+                <!-- modal for i button -->
+                <div class="modal fade" tabindex="-1" role="dialog" id="collectionsModal">
+                   <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                         <div class="modal-header">
+                              <h4 class="modal-title">Collection Types</h4>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                         </div>
+                         <div class="modal-body">
+                           <p>Collections connect to a social media platform's APIs, which are methods for retrieving data. Understanding
+                           what each collection type provides is important to ensure you collect what you need and are aware of any limitations.
+                           <a href="http://sfm.readthedocs.io/en/latest/collections.html" target="_blank">More details.</a></p>
+                         </div>
+                      </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
+                <ul class="dropdown-menu">
+                    {% for harvest_type, harvest_label in harvest_types %}
+                        <li class="dropdown-item">
+                            <a class="flex-column align-items" href="{% url "collection_create" collection_set.id harvest_type %}">
+				    <p><strong>Add {{ harvest_label }}</strong></a><br/>{{ harvest_description|get_item:harvest_type }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <br>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h4>Change log</h4>
+        <p><button type="submit" class="btn btn-primary btn-stacked" data-toggle="modal" data-target="#addNoteModal" {% if not can_edit %} disabled {% endif %}>
+            <i class="fas fa-plus fa-fw" aria-hidden="true"></i> Add note</button>
+            <br>
+        </p>
+        <div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="addNoteModal">
+            <div class="modal-dialog" role="document">
+                <form method="post" action={% url "collection_set_add_note" collection_set.pk %}>
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="addNoteModalLabel">Add note</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="div_id_add_note" class="form-group">
+                                <div class="controls ">
+                                    <textarea title="change_note" class="textarea form-control" cols="40" id="id_add_note" name="history_note" rows="4"></textarea>
+                                    <p id="hint_id_add_note" class="help-block">Provide a note to be added to the change log.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                Add note
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- modal-dialog -->
+        </div> <!-- modal -->
+        {% include "ui/diff_snippet.html" with log_entries=collection_set.log_entries %}
+    </div>
+</div>
+{% endblock %}

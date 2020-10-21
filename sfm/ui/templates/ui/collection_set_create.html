@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Add Collection Set
+{% endblock %}
+
+{% block content_header %}
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href={% url "collection_set_list" %}>Collection Sets</a></li>
+      <li class="breadcrumb-item active">Add New Collection Set</li>
+    </ol>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    	<h2>Add New Collection Set</h2>
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+      <p>* indicates required field</p>
+      {% crispy form %}
+  </div>
+</div>
+{% endblock %}
