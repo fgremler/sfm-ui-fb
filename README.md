@@ -60,4 +60,4 @@ Tickets / pull requests / discussion are welcome.
 The following changes have been made to incorporate FB-scraping functionality:
 
 * `models.py`: Added FB choices
-* `forms.py`: Added timeline class
+* `forms.py`: Added timeline classes

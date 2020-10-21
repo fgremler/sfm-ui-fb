@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Migrating db"
-/opt/sfm-ui/sfm/manage.py migrate --noinput
+chmod +x /opt/sfm-ui/sfm/manage.py migrate --noinput
 
 echo "Collecting static files"
 /opt/sfm-ui/sfm/manage.py collectstatic --noinput
