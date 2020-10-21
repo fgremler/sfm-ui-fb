@@ -1,7 +1,8 @@
 # sfm-ui / Social Feed Manager
 
 [![DOI](https://zenodo.org/badge/39789776.svg)](https://zenodo.org/badge/latestdoi/39789776)
-[![Build Status](https://travis-ci.org/gwu-libraries/sfm-ui.svg?branch=master)](https://travis-ci.org/gwu-libraries/sfm-ui)
+
+This is an extension of the UI for Social Feed Manager for FB.
 
 Social Feed Manager (SFM) harvests social media data from multiple platforms' public APIs to help archivists,
 librarians, and researchers to build social media collections. [More information about the project itself.](http://gwu-libraries.github.io/sfm-ui)
