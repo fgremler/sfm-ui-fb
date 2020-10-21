@@ -303,6 +303,8 @@ class Collection(models.Model):
     WEIBO_TIMELINE = 'weibo_timeline'
     WEIBO_SEARCH = 'weibo_search'
     TUMBLR_BLOG_POSTS = 'tumblr_blog_posts'
+    FACEBOOK_USER_TIMELINE = 'facebook_user_timeline'
+    FACEBOOK_USER_BIO = 'facebook_user_bio'
     SCHEDULE_CHOICES = [
         (1, 'One time harvest'),
         (30, 'Every 30 minutes'),
@@ -320,7 +322,10 @@ class Collection(models.Model):
         (TWITTER_SAMPLE, 'Twitter sample'),
         (TUMBLR_BLOG_POSTS, 'Tumblr blog posts'),
         (FLICKR_USER, 'Flickr user'),
-        (WEIBO_TIMELINE, 'Weibo timeline')
+        (WEIBO_TIMELINE, 'Weibo timeline'),
+        (FACEBOOK_USER_TIMELINE, 'Facebook timeline'),
+        (FACEBOOK_USER_BIO, 'Facebook info/bio')
+        )
     ]
     HARVEST_DESCRIPTION = {
         TWITTER_SEARCH: 'Recent tweets matching a query',
@@ -329,7 +334,9 @@ class Collection(models.Model):
         TWITTER_SAMPLE: 'A subset of all tweets in real time',
         FLICKR_USER: 'Posts and photos from specific accounts',
         WEIBO_TIMELINE: "Posts from a user and the user's friends",
-        TUMBLR_BLOG_POSTS: 'Blog posts from specific blogs'
+        TUMBLR_BLOG_POSTS: 'Blog posts from specific blogs',
+        FACEBOOK_USER_TIMELINE: 'Posts from a public page',
+        FACEBOOK_USER_BIO: 'Scrapes info tab of public page'
     }
     HARVEST_FIELDS = {
         TWITTER_SEARCH: {"link": None, "token": "Search query", "uid": None},
@@ -338,14 +345,18 @@ class Collection(models.Model):
         TWITTER_SAMPLE: None,
         FLICKR_USER: {"link": "Link", "token": "Flickr users", "uid": "NSID"},
         WEIBO_TIMELINE: None,
-        TUMBLR_BLOG_POSTS: {"link": "Link", "token": None, "uid": "Blog name"}
+        TUMBLR_BLOG_POSTS: {"link": "Link", "token": None, "uid": "Blog name"},
+        FACEBOOK_USER_TIMELINE: {"link": "Link", "token": "Facebook accounts", "uid": "User ID"},
+        FACEBOOK_USER_BIO: {"link": "Link", "token": "Facebook accounts", "uid": "User ID"}
     }
     REQUIRED_SEED_COUNTS = {
         TWITTER_FILTER: 1,
         TWITTER_SEARCH: 1,
         WEIBO_SEARCH: 1,
         TWITTER_SAMPLE: 0,
-        WEIBO_TIMELINE: 0
+        WEIBO_TIMELINE: 0,
+        FACEBOOK_USER_TIMELINE: 1,
+        FACEBOOK_USER_BIO: 1
     }
     HARVEST_TYPES_TO_PLATFORM = {
         TWITTER_SEARCH: Credential.TWITTER,
@@ -356,6 +367,9 @@ class Collection(models.Model):
         WEIBO_TIMELINE: Credential.WEIBO,
         WEIBO_SEARCH: Credential.WEIBO,
         TUMBLR_BLOG_POSTS: Credential.TUMBLR
+        # todo necessary for FB?
+        # FACEBOOK_USER_TIMELINE: Credential.FACEBOOK,
+        # FACEBOOK_USER_BIO: Credential.FACEBOOK
     }
     STREAMING_HARVEST_TYPES = (TWITTER_SAMPLE, TWITTER_FILTER)
     RATE_LIMITED_HARVEST_TYPES = (TWITTER_USER_TIMELINE, TWITTER_SEARCH)
@@ -567,6 +581,7 @@ class Seed(models.Model):
         flickr_user_url = 'https://www.flickr.com/photos/'
         tumblr_blog_url = '.tumblr.com'
         weibo_topic_url = 'http://huati.weibo.com/k/'
+        facebook_user_url = 'https://www.facebook.com/'
         if self.collection.harvest_type == Collection.TWITTER_USER_TIMELINE and self.token:
             return twitter_user_url + self.token
         elif self.collection.harvest_type == Collection.FLICKR_USER and self.token:
@@ -575,6 +590,8 @@ class Seed(models.Model):
             return 'https://' + self.uid + tumblr_blog_url
         elif self.collection.harvest_type == Collection.WEIBO_SEARCH and self.token:
             return weibo_topic_url + self.token
+        elif self.collection.harvest_type == Collection.FACEBOOK_USER_TIMELINE and self.token:
+            retun facebook_user_url + self.token
         return None
 
     def __str__(self):
