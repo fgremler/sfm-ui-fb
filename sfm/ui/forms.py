@@ -289,6 +289,9 @@ class CollectionFacebookUserTimelineForm(BaseCollectionForm):
     def save(self, commit=True):
         m = super(CollectionFacebookUserTimelineForm, self).save(commit=False)
         m.harvest_type = Collection.FACEBOOK_USER_TIMELINE
+        harvest_options = {
+            "incremental": self.cleaned_data["incremental"]
+        }
         m.harvest_options = json.dumps(harvest_options, sort_keys=True)
         m.save()
         return m
@@ -936,7 +939,6 @@ class CredentialFacebookForm(BaseCredentialForm):
     username = forms.CharField(required=True)
 
     def __init__(self, *args, **kwargs):
-        print("init")
         super(CredentialFacebookForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][1].extend(['username'])
 
@@ -945,14 +947,12 @@ class CredentialFacebookForm(BaseCredentialForm):
             self.fields['username'].initial = token.get('username')
 
     def to_token(self):
-        print("totoken")
         return {"username": self.cleaned_data.get('username', "").strip()}
 
     def save(self, commit=True):
         print("save")
         m = super(CredentialFacebookForm, self).save(commit=False)
         m.platform = Credential.FACEBOOK
-        m.token = json.dumps(self.to_token())
         m.save()
         return m
 
