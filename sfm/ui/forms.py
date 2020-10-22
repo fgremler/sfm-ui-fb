@@ -933,18 +933,23 @@ class CredentialTwitterForm(BaseCredentialForm):
 class CredentialFacebookForm(BaseCredentialForm):
     """Credentials forCredentialFacebookForm - not strictly needed."""
 
+    username = forms.CharField(required=True)
+
     def __init__(self, *args, **kwargs):
+        print("init")
         super(CredentialFacebookForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][1].extend(['username'])
 
         if self.instance and self.instance.token:
             token = json.loads(self.instance.token)
-            self.fields['token'].initial = token.get('token')
+            self.fields['username'].initial = token.get('username')
 
     def to_token(self):
-        return {"username": self.instance.token.get('token')}
+        print("totoken")
+        return {"username": self.cleaned_data.get('username', "").strip()}
 
     def save(self, commit=True):
+        print("save")
         m = super(CredentialFacebookForm, self).save(commit=False)
         m.platform = Credential.FACEBOOK
         m.token = json.dumps(self.to_token())
