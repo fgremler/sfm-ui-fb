@@ -365,10 +365,9 @@ class Collection(models.Model):
         FLICKR_USER: Credential.FLICKR,
         WEIBO_TIMELINE: Credential.WEIBO,
         WEIBO_SEARCH: Credential.WEIBO,
-        TUMBLR_BLOG_POSTS: Credential.TUMBLR
-        # todo necessary for FB?
-        # FACEBOOK_USER_TIMELINE: Credential.FACEBOOK,
-        # FACEBOOK_USER_BIO: Credential.FACEBOOK
+        TUMBLR_BLOG_POSTS: Credential.TUMBLR,
+        FACEBOOK_USER_TIMELINE: Credential.FACEBOOK,
+        FACEBOOK_USER_BIO: Credential.FACEBOOK
     }
     STREAMING_HARVEST_TYPES = (TWITTER_SAMPLE, TWITTER_FILTER)
     RATE_LIMITED_HARVEST_TYPES = (TWITTER_USER_TIMELINE, TWITTER_SEARCH)
