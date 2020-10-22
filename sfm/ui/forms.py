@@ -743,7 +743,7 @@ class SeedFacebookUserTimelineForm(BaseSeedForm):
 
     def __init__(self, *args, **kwargs):
         super(SeedFacebookUserTimelineForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][0].extend('token', 'uid')
+        self.helper.layout[0][0].extend(('token', 'uid'))
 
 class BaseBulkSeedForm(forms.Form):
     TYPES = (('token', 'Username'), ('uid', 'NSID'))
