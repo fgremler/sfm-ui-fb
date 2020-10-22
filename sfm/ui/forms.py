@@ -733,7 +733,7 @@ class SeedFacebookUserTimelineForm(BaseSeedForm):
                             'If not given, the harvester will retrieve it itself'
 
         widgets = dict(BaseSeedForm.Meta.widgets)
-                widgets["token"] = forms.TextInput(attrs={'size': '60'})
+        widgets["token"] = forms.TextInput(attrs={'size': '60'})
         widgets["uid"] = forms.TextInput(attrs={'size': '50'})
 
     def __init__(self, *args, **kwargs):
