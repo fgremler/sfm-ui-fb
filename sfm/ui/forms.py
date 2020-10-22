@@ -199,7 +199,6 @@ class CollectionTwitterUserTimelineForm(BaseCollectionForm):
         m.save()
         return m
 
-
 class CollectionTwitterSearchForm(BaseCollectionForm):
     incremental = forms.BooleanField(initial=True, required=False, label=INCREMENTAL_LABEL, help_text=INCREMENTAL_HELP)
 
@@ -275,6 +274,26 @@ class CollectionFlickrUserForm(BaseCollectionForm):
         m.save()
         return m
 
+class CollectionFacebookUserTimelineForm(BaseCollectionForm):
+    incremental = forms.BooleanField(initial=True, required=False, label=INCREMENTAL_LABEL, help_text=INCREMENTAL_HELP)
+
+    def __init__(self, *args, **kwargs):
+        super(CollectionFacebookTimelineForm, self).__init__(*args, **kwargs)
+        self.helper.layout[0][5].extend(('incremental',))
+
+        if self.instance and self.instance.harvest_options:
+            harvest_options = json.loads(self.instance.harvest_options)
+            if "incremental" in harvest_options:
+                self.field['incremental'].initial = harvest_options["incremental"]
+
+    def save(self, commit=True):
+        m = super(CollectionFacebookTimelineForm, self).save(commit=False)
+        m.harvest_type = Collection.FACEBOOK_USER_TIMELINE
+        m.harvest_options = json.dumps(harvest_options, sort_keys=True)
+        m.save()
+        return m
+
+
 
 class CollectionWeiboTimelineForm(BaseCollectionForm):
     incremental = forms.BooleanField(initial=True, required=False, label=INCREMENTAL_LABEL, help_text=INCREMENTAL_HELP)
@@ -344,24 +363,7 @@ class CollectionTumblrBlogPostsForm(BaseCollectionForm):
         m.save()
         return m
 
-class CollectionFacebookTimelineForm(BaseCollectionForm):
-    incremental = forms.BooleanField(initial=True, required=False, label=INCREMENTAL_LABEL, help_text=INCREMENTAL_HELP)
 
-    def __init__(self, *args, **kwargs):
-        super(CollectionFacebookTimelineForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][5].extend(('incremental',))
-
-        if self.instance and self.instance.harvest_options:
-            harvest_options = json.loads(self.instance.harvest_options)
-            if "incremental" in harvest_options:
-                self.field['incremental'].initial = harvest_options["incremental"]
-
-    def save(self, commit=True):
-        m = super(CollectionFacebookTimelineForm, self).save(commit=False)
-        m.harvest_type = Collection.FACEBOOK_USER_TIMELINE
-        m.harvest_options = json.dumps(harvest_options, sort_keys=True)
-        m.save()
-        return m
 
 class BaseSeedForm(forms.ModelForm):
     class Meta:
