@@ -325,7 +325,6 @@ class Collection(models.Model):
         (WEIBO_TIMELINE, 'Weibo timeline'),
         (FACEBOOK_USER_TIMELINE, 'Facebook timeline'),
         (FACEBOOK_USER_BIO, 'Facebook info/bio')
-        )
     ]
     HARVEST_DESCRIPTION = {
         TWITTER_SEARCH: 'Recent tweets matching a query',
