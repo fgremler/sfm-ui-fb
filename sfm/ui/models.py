@@ -590,7 +590,7 @@ class Seed(models.Model):
         elif self.collection.harvest_type == Collection.WEIBO_SEARCH and self.token:
             return weibo_topic_url + self.token
         elif self.collection.harvest_type == Collection.FACEBOOK_USER_TIMELINE and self.token:
-            retun facebook_user_url + self.token
+            return facebook_user_url + self.token
         return None
 
     def __str__(self):
