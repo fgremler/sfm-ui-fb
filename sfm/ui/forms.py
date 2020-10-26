@@ -786,7 +786,7 @@ class SeedFacebookUserBioForm(BaseSeedForm):
         widgets["uid"] = forms.TextInput(attrs={'size': '50'})
 
     def __init__(self, *args, **kwargs):
-        super(SeedFacebookUserTimelineForm, self).__init__(*args, **kwargs)
+        super(SeedFacebookUserBioForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][0].extend(('token', 'uid'))
 
 
