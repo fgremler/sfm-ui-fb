@@ -1046,7 +1046,7 @@ class CredentialFacebookForm(BaseCredentialForm):
     def save(self, commit=True):
         m = super(CredentialFacebookForm, self).save(commit=False)
         m.platform = Credential.FACEBOOK
-        m.token = jsond.dumps(self.to_token())
+        m.token = json.dumps(self.to_token())
         m.save()
         return m
 
