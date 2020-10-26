@@ -318,6 +318,28 @@ class CollectionFacebookUserBioForm(BaseCollectionForm):
         m.save()
         return m
 
+class CollectionFacebookUserAdsForm(BaseCollectionForm):
+        incremental = forms.BooleanField(initial=True, required=False, label=INCREMENTAL_LABEL, help_text=INCREMENTAL_HELP)
+
+        def __init__(self, *args, **kwargs):
+            super(CollectionFacebookUserAdsForm, self).__init__(*args, **kwargs)
+            self.helper.layout[0][5].extend(('incremental',))
+
+            if self.instance and self.instance.harvest_options:
+                harvest_options = json.loads(self.instance.harvest_options)
+                if "incremental" in harvest_options:
+                    self.field['incremental'].initial = harvest_options['incremental']
+
+        def save(self, commit=True):
+            m = super(CollectionFacebookUserAdsForm, self).save(commit=False)
+            m.harvest_type = Collection.FACEBOOK_USER_BIO
+            harvest_options = {
+                "incremental": self.cleaned_data["incremental"]
+            }
+            m.harvest_options = json.dumps(harvest_options, sort_keys=True)
+            m.save()
+            return m
+
 
 class CollectionWeiboTimelineForm(BaseCollectionForm):
     incremental = forms.BooleanField(initial=True, required=False, label=INCREMENTAL_LABEL, help_text=INCREMENTAL_HELP)
@@ -789,6 +811,29 @@ class SeedFacebookUserBioForm(BaseSeedForm):
         super(SeedFacebookUserBioForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][0].extend(('token', 'uid'))
 
+class SeedFacebookUserAdsForm(BaseSeedForm):
+    class Meta(BaseSeedForm.Meta):
+        fields = ['token', 'uid']
+        fields.extend(BaseSeedForm.Meta.fields)
+        labels = dict(BaseSeedForm.Meta.labels)
+        labels["token"] = "Facebook username"
+        labels["uid"] = "Unique FB id - not compulsory"
+        help_texts = dict(BaseSeedForm.Meta.help_texts)
+        help_texts["token"] = "A string name for the user account. This can simply be copied " \
+                                "as the url directing to the account's main page"
+        help_texts["uid"] = 'Provide the unique FB id' \
+                            'Can be retrieved from tools like https://findmyfbid.com/' \
+                            'If not given, the harvester will retrieve it itself'
+
+        widgets = dict(BaseSeedForm.Meta.widgets)
+        widgets["token"] = forms.TextInput(attrs={'size': '60'})
+        widgets["uid"] = forms.TextInput(attrs={'size': '50'})
+
+    def __init__(self, *args, **kwargs):
+        super(SeedFacebookUserAdsForm, self).__init__(*args, **kwargs)
+        self.helper.layout[0][0].extend(('token', 'uid'))
+
+
 
 
 class BaseBulkSeedForm(forms.Form):
@@ -980,20 +1025,21 @@ class CredentialTwitterForm(BaseCredentialForm):
 
 
 class CredentialFacebookForm(BaseCredentialForm):
-    """Credentials forCredentialFacebookForm - not strictly needed."""
+    """Credentials forCredentialFacebookForm - not strictly needed for scraping
+    procedures, but necessary for calling Ads API."""
 
-    username = forms.CharField(required=True)
+    access_token = forms.CharField(required=True)
 
     def __init__(self, *args, **kwargs):
         super(CredentialFacebookForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][1].extend(['username'])
+        self.helper.layout[0][1].extend(['acess_token'])
 
         if self.instance and self.instance.token:
             token = json.loads(self.instance.token)
-            self.fields['username'].initial = token.get('username')
+            self.fields['acess_token'].initial = token.get('acess_token')
 
     def to_token(self):
-        return {"username": self.cleaned_data.get('username', "").strip()}
+        return {"access_token": self.cleaned_data.get('acess_token', "").strip()}
 
     def save(self, commit=True):
         print("save")
@@ -1146,7 +1192,7 @@ class ExportForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'email_frequency', 'harvest_notifications']
+        fields = ['acess_token', 'email', 'email_frequency', 'harvest_notifications']
         widgets = {
             "username": forms.TextInput(attrs={'size': '40'}),
             "email": forms.TextInput(attrs={'size': '40'})
