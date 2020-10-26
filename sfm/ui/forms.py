@@ -296,6 +296,27 @@ class CollectionFacebookUserTimelineForm(BaseCollectionForm):
         m.save()
         return m
 
+class CollectionFacebookUserBioForm(BaseCollectionForm):
+    incremental = forms.BooleanField(initial=True, required=False, label=INCREMENTAL_LABEL, help_text=INCREMENTAL_HELP)
+
+    def __init__(self, *args, **kwargs):
+        super(CollectionFacebookUserBioForm, self).__init__(*args, **kwargs)
+        self.helper.layout[0][5].extend(('incremental',))
+
+        if self.instance and self.instance.harvest_options:
+            harvest_options = json.loads(self.instance.harvest_options)
+            if "incremental" in harvest_options:
+                self.field['incremental'].initial = harvest_options['incremental']
+
+    def save(self, commit=True):
+        m = super(CollectionFacebookUserTimelineForm, self).save(commit=False)
+        m.harvest_type = Collection.FACEBOOK_USER_BIO
+        harvest_options = {
+            "incremental": self.cleaned_data["incremental"]
+        }
+        m.harvest_options = json.dumps(harvest_options, sort_keys=True)
+        m.save()
+        return m
 
 
 class CollectionWeiboTimelineForm(BaseCollectionForm):
@@ -744,6 +765,31 @@ class SeedFacebookUserTimelineForm(BaseSeedForm):
     def __init__(self, *args, **kwargs):
         super(SeedFacebookUserTimelineForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][0].extend(('token', 'uid'))
+
+
+class SeedFacebookUserBioForm(BaseSeedForm):
+    class Meta(BaseSeedForm.Meta):
+        fields = ['token', 'uid']
+        fields.extend(BaseSeedForm.Meta.fields)
+        labels = dict(BaseSeedForm.Meta.labels)
+        labels["token"] = "Facebook username"
+        labels["uid"] = "Unique FB id - not compulsory"
+        help_texts = dict(BaseSeedForm.Meta.help_texts)
+        help_texts["token"] = "A string name for the user account. This can simply be copied " \
+                                "as the url directing to the account's main page"
+        help_texts["uid"] = 'Provide the unique FB id' \
+                            'Can be retrieved from tools like https://findmyfbid.com/' \
+                            'If not given, the harvester will retrieve it itself'
+
+        widgets = dict(BaseSeedForm.Meta.widgets)
+        widgets["token"] = forms.TextInput(attrs={'size': '60'})
+        widgets["uid"] = forms.TextInput(attrs={'size': '50'})
+
+    def __init__(self, *args, **kwargs):
+        super(SeedFacebookUserTimelineForm, self).__init__(*args, **kwargs)
+        self.helper.layout[0][0].extend(('token', 'uid'))
+
+
 
 class BaseBulkSeedForm(forms.Form):
     TYPES = (('token', 'Username'), ('uid', 'NSID'))
