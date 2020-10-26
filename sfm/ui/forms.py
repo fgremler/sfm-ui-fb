@@ -1039,7 +1039,7 @@ class CredentialFacebookForm(BaseCredentialForm):
             self.fields['access_token'].initial = token.get('access_token')
 
     def to_token(self):
-        return {"access_token": self.cleaned_data.get('acess_token', "").strip()}
+        return {"access_token": self.cleaned_data.get('access_token', "").strip()}
 
     def save(self, commit=True):
         m = super(CredentialFacebookForm, self).save(commit=False)
@@ -1192,7 +1192,7 @@ class ExportForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['acess_token', 'email', 'email_frequency', 'harvest_notifications']
+        fields = ['access_token', 'email', 'email_frequency', 'harvest_notifications']
         widgets = {
             "username": forms.TextInput(attrs={'size': '40'}),
             "email": forms.TextInput(attrs={'size': '40'})
