@@ -1028,18 +1028,20 @@ class CredentialFacebookForm(BaseCredentialForm):
     """Credentials forCredentialFacebookForm - not strictly needed for scraping
     procedures, but necessary for calling Ads API."""
 
-    access_token = forms.CharField(required=True)
+    access_token_fb = forms.CharField(required=True)
 
     def __init__(self, *args, **kwargs):
         super(CredentialFacebookForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][1].extend(['access_token'])
+        self.helper.layout[0][1].extend(['access_token_fb'])
 
         if self.instance and self.instance.token:
             token = json.loads(self.instance.token)
-            self.fields['access_token'].initial = token.get('access_token')
+            self.fields['access_token_fb'].initial = token.get('access_token_fb')
 
     def to_token(self):
-        return {"access_token": self.cleaned_data.get('access_token', "").strip()}
+        return {
+            "access_token_fb": self.cleaned_data.get("access_token_fb", "").strip(),
+        }
 
     def save(self, commit=True):
         m = super(CredentialFacebookForm, self).save(commit=False)
