@@ -649,7 +649,7 @@ class SeedFacebookUserAdsForm(BaseSeedForm):
                                                 must be exactly 2 characters (2c)""")
 
     def __init__(self, *args, **kwargs):
-        sper(SeedFacebookUserAdsForm).__init__(*args, **kwargs)
+        super(SeedFacebookUserAdsForm).__init__(*args, **kwargs)
         self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
         token = json.loads(self.instance.token)
 
