@@ -332,7 +332,7 @@ class CollectionFacebookUserAdsForm(BaseCollectionForm):
 
         def save(self, commit=True):
             m = super(CollectionFacebookUserAdsForm, self).save(commit=False)
-            m.harvest_type = Collection.FACEBOOK_USER_BIO
+            m.harvest_type = Collection.FACEBOOK_USER_ADS
             harvest_options = {
                 "incremental": self.cleaned_data["incremental"]
             }
@@ -813,25 +813,29 @@ class SeedFacebookUserBioForm(BaseSeedForm):
 
 class SeedFacebookUserAdsForm(BaseSeedForm):
     class Meta(BaseSeedForm.Meta):
-        fields = ['token', 'uid']
+        fields = ['token', 'uid', 'iso2c']
         fields.extend(BaseSeedForm.Meta.fields)
         labels = dict(BaseSeedForm.Meta.labels)
         labels["token"] = "Facebook username"
         labels["uid"] = "Unique FB id - not compulsory"
+        labels["iso2c"] = "iso2c code of country"
         help_texts = dict(BaseSeedForm.Meta.help_texts)
         help_texts["token"] = "A string name for the user account. This can simply be copied " \
                                 "as the url directing to the account's main page"
         help_texts["uid"] = 'Provide the unique FB id' \
                             'Can be retrieved from tools like https://findmyfbid.com/' \
                             'If not given, the harvester will retrieve it itself'
-
+        help_texts["iso2c"] = 'Provide the iso2c todolink of the country where ads' \
+                                'are displayed - usually the homeland of the fb account' \
+                                'must be exactly 2 characters (2c)'
         widgets = dict(BaseSeedForm.Meta.widgets)
         widgets["token"] = forms.TextInput(attrs={'size': '60'})
         widgets["uid"] = forms.TextInput(attrs={'size': '50'})
+        widgest["iso2c"] = forms.TextInput(attrs={'size': '2'})
 
     def __init__(self, *args, **kwargs):
         super(SeedFacebookUserAdsForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][0].extend(('token', 'uid'))
+        self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
 
 
 
