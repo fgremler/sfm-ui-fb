@@ -831,7 +831,7 @@ class SeedFacebookUserAdsForm(BaseSeedForm):
         widgets = dict(BaseSeedForm.Meta.widgets)
         widgets["token"] = forms.TextInput(attrs={'size': '60'})
         widgets["uid"] = forms.TextInput(attrs={'size': '50'})
-        widgest["iso2c"] = forms.TextInput(attrs={'size': '2'})
+        widgets["iso2c"] = forms.TextInput(attrs={'size': '2'})
 
     def __init__(self, *args, **kwargs):
         super(SeedFacebookUserAdsForm, self).__init__(*args, **kwargs)
