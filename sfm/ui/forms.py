@@ -1032,11 +1032,11 @@ class CredentialFacebookForm(BaseCredentialForm):
 
     def __init__(self, *args, **kwargs):
         super(CredentialFacebookForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][1].extend(['acess_token'])
+        self.helper.layout[0][1].extend(['access_token'])
 
         if self.instance and self.instance.token:
             token = json.loads(self.instance.token)
-            self.fields['acess_token'].initial = token.get('acess_token')
+            self.fields['access_token'].initial = token.get('access_token')
 
     def to_token(self):
         return {"access_token": self.cleaned_data.get('acess_token', "").strip()}
