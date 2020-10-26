@@ -304,7 +304,7 @@ class Collection(models.Model):
     WEIBO_SEARCH = 'weibo_search'
     TUMBLR_BLOG_POSTS = 'tumblr_blog_posts'
     FACEBOOK_USER_TIMELINE = 'facebook_user_timeline'
-    FACEBOOK_USER_BIO = 'facebook_user_bio',
+    FACEBOOK_USER_BIO = 'facebook_user_bio'
     FACEBOOK_USER_ADS = 'facebook_user_ads'
     SCHEDULE_CHOICES = [
         (1, 'One time harvest'),
