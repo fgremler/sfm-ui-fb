@@ -326,7 +326,7 @@ class Collection(models.Model):
         (WEIBO_TIMELINE, 'Weibo timeline'),
         (FACEBOOK_USER_TIMELINE, 'Facebook timeline'),
         (FACEBOOK_USER_BIO, 'Facebook info/bio'),
-        (FACEBOOK_USER_ADS, 'Political Facebok ads by user')
+        (FACEBOOK_USER_ADS, 'Political Facebook ads by user')
     ]
     HARVEST_DESCRIPTION = {
         TWITTER_SEARCH: 'Recent tweets matching a query',
@@ -338,7 +338,7 @@ class Collection(models.Model):
         TUMBLR_BLOG_POSTS: 'Blog posts from specific blogs',
         FACEBOOK_USER_TIMELINE: 'Posts from a public page',
         FACEBOOK_USER_BIO: 'Scrapes info tab of a public page',
-        FACEBOOK_USER_ADS: ''
+        FACEBOOK_USER_ADS: 'Political Facebook User Ads'
     }
     HARVEST_FIELDS = {
         TWITTER_SEARCH: {"link": None, "token": "Search query", "uid": None},
