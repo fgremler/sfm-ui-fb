@@ -610,6 +610,59 @@ class SeedWeiboSearchForm(BaseSeedForm):
         super(SeedWeiboSearchForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][0].append('token')
 
+# class SeedFacebookUserAdsForm(BaseSeedForm):
+#     class Meta(BaseSeedForm.Meta):
+#         fields = ['token', 'uid', 'iso2c']
+#         fields.extend(BaseSeedForm.Meta.fields)
+#         labels = dict(BaseSeedForm.Meta.labels)
+#         labels["token"] = "Facebook username"
+#         labels["uid"] = "Unique FB id - not compulsory"
+#         labels["iso2c"] = "iso2c code of country"
+#         help_texts = dict(BaseSeedForm.Meta.help_texts)
+#         help_texts["token"] = "A string name for the user account. This can simply be copied " \
+#                                 "as the url directing to the account's main page"
+#         help_texts["uid"] = 'Provide the unique FB id' \
+#                             'Can be retrieved from tools like https://findmyfbid.com/' \
+#                             'If not given, the harvester will retrieve it itself'
+#         help_texts["iso2c"] = 'Provide the iso2c todolink of the country where ads' \
+#                                 'are displayed - usually the homeland of the fb account' \
+#                                 'must be exactly 2 characters (2c)'
+#         widgets = dict(BaseSeedForm.Meta.widgets)
+#         widgets["token"] = forms.TextInput(attrs={'size': '60'})
+#         widgets["uid"] = forms.TextInput(attrs={'size': '50'})
+#         widgets["iso2c"] = forms.TextInput(attrs={'size': '2'})
+#
+#     def __init__(self, *args, **kwargs):
+#         super(SeedFacebookUserAdsForm, self).__init__(*args, **kwargs)
+#         self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
+
+class SeedFacebookUserAdsForm(BaseSeedForm):
+    token = forms.CharField(required=True, widget=forms.Textarea(attrs={'rows':1}),
+                            help_text="""A string name for the user account. This can simply be copied
+                                                    as the url directing to the account's main page""")
+    uid = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':1}),
+                            help_text="""Provide the unique FB id Can be retrieved from tools like https://findmyfbid.com/
+                                                If not given, the harvester will retrieve it itself""")
+    iso2c = forms.CharField(required=True, widget=forms.Textarea(attrs={'rows':1, 'size': '2'}),
+                        help_text="""Provide the iso2c todolink of the country where ads
+                                                are displayed - usually the homeland of the fb account
+                                                must be exactly 2 characters (2c)""")
+
+    def __init__(self, *args, **kwargs):
+        sper(SeedFacebookUserAdsForm).__init__(*args, **kwargs)
+        self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
+        token = json.loads(self.instance.token)
+
+    def save(self, commit=True):
+        m = super(SeedFacebookUserAdsForm, self).save(commit=False)
+        token = dict()
+        token['token'] = self.instance.token
+        token['uid'] = self.instance.uid
+        token['iso2c'] = self.instance.iso2c
+
+        m.token = json.dumps(token, ensure_ascii=False)
+        m.save()
+        return m
 
 class SeedTwitterFilterForm(BaseSeedForm):
     track = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4}),
@@ -810,32 +863,6 @@ class SeedFacebookUserBioForm(BaseSeedForm):
     def __init__(self, *args, **kwargs):
         super(SeedFacebookUserBioForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][0].extend(('token', 'uid'))
-
-class SeedFacebookUserAdsForm(BaseSeedForm):
-    class Meta(BaseSeedForm.Meta):
-        fields = ['token', 'uid', 'iso2c']
-        fields.extend(BaseSeedForm.Meta.fields)
-        labels = dict(BaseSeedForm.Meta.labels)
-        labels["token"] = "Facebook username"
-        labels["uid"] = "Unique FB id - not compulsory"
-        labels["iso2c"] = "iso2c code of country"
-        help_texts = dict(BaseSeedForm.Meta.help_texts)
-        help_texts["token"] = "A string name for the user account. This can simply be copied " \
-                                "as the url directing to the account's main page"
-        help_texts["uid"] = 'Provide the unique FB id' \
-                            'Can be retrieved from tools like https://findmyfbid.com/' \
-                            'If not given, the harvester will retrieve it itself'
-        help_texts["iso2c"] = 'Provide the iso2c todolink of the country where ads' \
-                                'are displayed - usually the homeland of the fb account' \
-                                'must be exactly 2 characters (2c)'
-        widgets = dict(BaseSeedForm.Meta.widgets)
-        widgets["token"] = forms.TextInput(attrs={'size': '60'})
-        widgets["uid"] = forms.TextInput(attrs={'size': '50'})
-        widgets["iso2c"] = forms.TextInput(attrs={'size': '2'})
-
-    def __init__(self, *args, **kwargs):
-        super(SeedFacebookUserAdsForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
 
 
 
