@@ -309,7 +309,7 @@ class CollectionFacebookUserBioForm(BaseCollectionForm):
                 self.field['incremental'].initial = harvest_options['incremental']
 
     def save(self, commit=True):
-        m = super(CollectionFacebookUserTimelineForm, self).save(commit=False)
+        m = super(CollectionFacebookUserBioForm, self).save(commit=False)
         m.harvest_type = Collection.FACEBOOK_USER_BIO
         harvest_options = {
             "incremental": self.cleaned_data["incremental"]
