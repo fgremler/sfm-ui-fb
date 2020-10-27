@@ -657,9 +657,9 @@ class SeedFacebookUserAdsForm(BaseSeedForm):
     def save(self, commit=True):
         m = super(SeedFacebookUserAdsForm, self).save(commit=False)
         token = dict()
-        token['token'] = self.instance.token
-        token['uid'] = self.instance.uid
-        token['isoc'] = self.instance.isoc
+        token['token'] = self.cleaned_data.get("token").strip()
+        token['uid'] = self.cleaned_data.get("uid").strip()
+        token['isoc'] = self.cleaned_data.get("isoc").strip()
 
         m.token = json.dumps(token, ensure_ascii=False)
         m.save()
