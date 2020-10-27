@@ -651,7 +651,8 @@ class SeedFacebookUserAdsForm(BaseSeedForm):
     def __init__(self, *args, **kwargs):
         super(SeedFacebookUserAdsForm, self).__init__(*args, **kwargs)
         self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
-        token = json.loads(self.instance.token)
+        if self.instance and self.instance.token:
+            token = json.loads(self.instance.token)
 
     def save(self, commit=True):
         m = super(SeedFacebookUserAdsForm, self).save(commit=False)
