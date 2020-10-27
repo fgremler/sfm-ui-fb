@@ -637,7 +637,7 @@ class SeedWeiboSearchForm(BaseSeedForm):
 #         self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
 
 class SeedFacebookUserAdsForm(BaseSeedForm):
-    token = forms.CharField(required=True, widget=forms.Textarea(attrs={'rows':1}),
+    username = forms.CharField(required=True, widget=forms.Textarea(attrs={'rows':1}),
                             help_text="""A string name for the user account. This can simply be copied
                                                     as the url directing to the account's main page""")
     uid = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':1}),
@@ -650,14 +650,14 @@ class SeedFacebookUserAdsForm(BaseSeedForm):
 
     def __init__(self, *args, **kwargs):
         super(SeedFacebookUserAdsForm, self).__init__(*args, **kwargs)
-        self.helper.layout[0][0].extend(('token', 'uid', 'iso2c'))
+        self.helper.layout[0][0].extend(('username', 'uid', 'iso2c'))
         if self.instance and self.instance.token:
             token = json.loads(self.instance.token)
 
     def save(self, commit=True):
         m = super(SeedFacebookUserAdsForm, self).save(commit=False)
         token = dict()
-        token['token'] = self.cleaned_data.get("token").strip()
+        token['username'] = self.cleaned_data.get("username").strip()
         token['uid'] = self.cleaned_data.get("uid").strip()
         token['iso2c'] = self.cleaned_data.get("iso2c").strip()
 
