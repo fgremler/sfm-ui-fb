@@ -1226,7 +1226,7 @@ class ExportForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'email_frequency', 'harvest_notifications']
+        fields = ['username', 'email', 'email_frequency', 'harvest_notifications']
         widgets = {
             "username": forms.TextInput(attrs={'size': '40'}),
             "email": forms.TextInput(attrs={'size': '40'})
