@@ -109,12 +109,14 @@ class Credential(models.Model):
     WEIBO = "weibo"
     TUMBLR = "tumblr"
     FACEBOOK = "facebook"
+    INSTAGRAM = "instagram"
     PLATFORM_CHOICES = [
         (TWITTER, 'Twitter'),
         (FLICKR, 'Flickr'),
         (WEIBO, 'Weibo'),
         (TUMBLR, "Tumblr"),
-        (FACEBOOK, "Facebook")
+        (FACEBOOK, "Facebook"),
+        (INSTAGRAM, "Instagram")
     ]
     credential_id = models.CharField(max_length=32, unique=True, default=default_uuid)
     name = models.CharField(max_length=255, verbose_name='Credential name')
@@ -306,6 +308,7 @@ class Collection(models.Model):
     FACEBOOK_USER_TIMELINE = 'facebook_user_timeline'
     FACEBOOK_USER_BIO = 'facebook_user_bio'
     FACEBOOK_USER_ADS = 'facebook_user_ads'
+    INSTAGRAM_USER_TIMELINE = 'instagram_user_timeline'
     SCHEDULE_CHOICES = [
         (1, 'One time harvest'),
         (30, 'Every 30 minutes'),
@@ -326,7 +329,8 @@ class Collection(models.Model):
         (WEIBO_TIMELINE, 'Weibo timeline'),
         (FACEBOOK_USER_TIMELINE, 'Facebook timeline'),
         (FACEBOOK_USER_BIO, 'Facebook info/bio'),
-        (FACEBOOK_USER_ADS, 'Political Facebook ads by user')
+        (FACEBOOK_USER_ADS, 'Political Facebook ads by user'),
+        (INSTAGRAM_USER_TIMELINE, "Instagram timeline of user")
     ]
     HARVEST_DESCRIPTION = {
         TWITTER_SEARCH: 'Recent tweets matching a query',
@@ -338,7 +342,8 @@ class Collection(models.Model):
         TUMBLR_BLOG_POSTS: 'Blog posts from specific blogs',
         FACEBOOK_USER_TIMELINE: 'Posts from a public page',
         FACEBOOK_USER_BIO: 'Scrapes info tab of a public page',
-        FACEBOOK_USER_ADS: 'Political Facebook User Ads'
+        FACEBOOK_USER_ADS: 'Political Facebook User Ads',
+        INSTAGRAM_USER_TIMELINE: 'Instagram timeline of user'
     }
     HARVEST_FIELDS = {
         TWITTER_SEARCH: {"link": None, "token": "Search query", "uid": None},
@@ -350,7 +355,8 @@ class Collection(models.Model):
         TUMBLR_BLOG_POSTS: {"link": "Link", "token": None, "uid": "Blog name"},
         FACEBOOK_USER_TIMELINE: {"link": "Link", "token": "Facebook accounts", "uid": "User ID"},
         FACEBOOK_USER_BIO: {"link": "Link", "token": "Facebook accounts", "uid": "User ID"},
-        FACEBOOK_USER_ADS: {"link": "Link", "token": "Facebook accounts", "uid": "User ID"}
+        FACEBOOK_USER_ADS: {"link": "Link", "token": "Facebook accounts", "uid": "User ID"},
+        INSTAGRAM_USER_TIMELINE: {"link": "Link", "token": "Instagram accounts", "uid": "User ID"}
     }
     REQUIRED_SEED_COUNTS = {
         TWITTER_FILTER: 1,
@@ -360,7 +366,8 @@ class Collection(models.Model):
         WEIBO_TIMELINE: 0,
         FACEBOOK_USER_TIMELINE: 1,
         FACEBOOK_USER_BIO: 1,
-        FACEBOOK_USER_ADS: 1
+        FACEBOOK_USER_ADS: 1,
+        INSTAGRAM_USER_TIMELINE: 1
     }
 
     HARVEST_TYPES_TO_PLATFORM = {
@@ -374,7 +381,8 @@ class Collection(models.Model):
         TUMBLR_BLOG_POSTS: Credential.TUMBLR,
         FACEBOOK_USER_TIMELINE: Credential.FACEBOOK,
         FACEBOOK_USER_BIO: Credential.FACEBOOK,
-        FACEBOOK_USER_ADS: Credential.FACEBOOK
+        FACEBOOK_USER_ADS: Credential.FACEBOOK,
+        INSTAGRAM_USER_TIMELINE: Credential.INSTAGRAM
     }
     STREAMING_HARVEST_TYPES = (TWITTER_SAMPLE, TWITTER_FILTER)
     RATE_LIMITED_HARVEST_TYPES = (TWITTER_USER_TIMELINE, TWITTER_SEARCH)
@@ -587,6 +595,7 @@ class Seed(models.Model):
         tumblr_blog_url = '.tumblr.com'
         weibo_topic_url = 'http://huati.weibo.com/k/'
         facebook_user_url = 'https://www.facebook.com/'
+        instagram_user_url = 'https://www.instagram.com/'
         if self.collection.harvest_type == Collection.TWITTER_USER_TIMELINE and self.token:
             return twitter_user_url + self.token
         elif self.collection.harvest_type == Collection.FLICKR_USER and self.token:
@@ -597,6 +606,8 @@ class Seed(models.Model):
             return weibo_topic_url + self.token
         elif (self.collection.harvest_type == Collection.FACEBOOK_USER_TIMELINE or self.collection.harvest_type == Collection.FACEBOOK_USER_BIO or self.collection.harvest_type == Collection.FACEBOOK_USER_ADS) and self.token:
             return self.token
+        elif self.collection.harvest_type == Collection.INSTAGRAM_USER_TIMELINE and self.token:
+            return instagram_user_url + self.token
         return None
 
     def __str__(self):
