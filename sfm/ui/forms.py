@@ -1150,8 +1150,8 @@ class CredentialInstagramForm(BaseCredentialForm):
 
     def to_token(self):
         return {
-            "user_email_ins": self.cleaned_data.get("user_email_fb", "").strip(),
-            "user_password_ins": self.cleaned_data.get("user_password_fb", "").strip()
+            "user_email_ins": self.cleaned_data.get("user_email_ins", "").strip(),
+            "user_password_ins": self.cleaned_data.get("user_password_ins", "").strip()
         }
 
     def save(self, commit=True):

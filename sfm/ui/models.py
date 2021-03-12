@@ -607,7 +607,7 @@ class Seed(models.Model):
         elif (self.collection.harvest_type == Collection.FACEBOOK_USER_TIMELINE or self.collection.harvest_type == Collection.FACEBOOK_USER_BIO or self.collection.harvest_type == Collection.FACEBOOK_USER_ADS) and self.token:
             return self.token
         elif self.collection.harvest_type == Collection.INSTAGRAM_USER_TIMELINE and self.token:
-            return instagram_user_url + self.token
+            return self.token
         return None
 
     def __str__(self):
